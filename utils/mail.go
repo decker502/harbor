@@ -17,7 +17,6 @@ package utils
 
 import (
 	"bytes"
-	"crypto/tls"
 	"strings"
 
 	"net/smtp"
@@ -78,12 +77,17 @@ func sendMail(m Mail, auth smtp.Auth, content []byte) error {
 }
 
 func sendMailWithTLS(m Mail, auth smtp.Auth, content []byte) error {
-	conn, err := tls.Dial("tcp", mc.Host+":"+mc.Port, nil)
-	if err != nil {
-		return err
-	}
-
-	client, err := smtp.NewClient(conn, mc.Host)
+	// conn, err := tls.Dial("tcp", mc.Host+":"+mc.Port, nil)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// client, err := smtp.NewClient(conn, mc.Host)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer client.Close()
+	client, err := smtp.Dial(mc.Host + ":" + mc.Port)
 	if err != nil {
 		return err
 	}
@@ -134,7 +138,8 @@ func loadConfig() {
 		useTLS = true
 	}
 	mc = MailConfig{
-		Identity: "Mail Config",
+		// Identity: "Mail Config",
+		Identity: "",
 		Host:     config["host"],
 		Port:     config["port"],
 		Username: config["username"],
